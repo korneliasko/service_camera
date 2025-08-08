@@ -42,4 +42,10 @@ source install/setup.bash
 
 ros2 service call /save_image example_interfaces/srv/Trigger
 
+# COPY
+docker cp
+
+docker cp kornelia_humble:/root/Shared/ros2_ws/images/image_20250808_085613.jpg .
+
+scp sonata:~/image_20250808_085613.jpg "C:/Users/korne/"
 
