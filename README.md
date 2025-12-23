@@ -1,73 +1,28 @@
-service_camera
+# 📷 service_camera – ROS 2 Image Capture Service
 
-# TERMINAL 1
-ssh sonata
+![ROS 2 Humble](https://img.shields.io/badge/ROS%202-Humble-blue)
+![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED)
+![Python](https://img.shields.io/badge/Python-3.x-yellow)
+![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey)
 
-docker ps -a           # check the status of containers (optional)
+This repository contains a **ROS 2 service node** that allows capturing and saving an image from an **Orbbec Femto Mega camera** using a simple service call.  
+The node is designed to run inside a **Docker container** with **ROS 2 Humble**.
 
-docker exec -it kornelia_humble bash   # run your docker container
+---
 
-cd ros2_ws/            # now in: root@lrm-sonata:~/Shared/ros2_ws#
+## 🧩 Overview
 
-source /opt/ros/humble/setup.bash
+- **Camera driver:** Orbbec Femto Mega  
+- **ROS 2 distro:** Humble  
+- **Service type:** `example_interfaces/srv/Trigger`  
+- **Service name:** `/save_image`  
+- **Output:** Images saved inside the container and copied to the host machine  
 
-source install/setup.bash
+---
 
-git clone https://github.com/korneliasko/service_camera.git # clone the package - not needed i think
+## 🖥️ System Setup
 
-colcon build
+All commands are executed on the remote machine **`sonata`**, inside the Docker container:
 
-ros2 run py_srvcli service
-
-
-# TERMINAL 2
-ssh sonata
-docker exec -it kornelia_humble bash  
-
-cd ros2_ws/
-
-source /opt/ros/humble/setup.bash
-
-source install/setup.bash
-
-ros2 launch orbbec_camera femto_mega.launch.py 
-
-#for a narrow view:
-ros2 launch orbbec_camera femto_mega.launch.py depth_mode:=NFOV_UNBINNED
-ros2 launch orbbec_camera femto_mega.launch.py fov:=narrow
-
-
-#if launched the camera already
-ros2 param set /camera depth_mode NFOV_UNBINNED
-ros2 param set /camera fov narrow
-
-
-# TERMINAL 3
-
-ssh sonata
-
+```bash
 docker exec -it kornelia_humble bash
-
-cd ros2_ws (always in: root@lrm-sonata:~/Shared/ros2_ws/)
-
-source /opt/ros/humble/setup.bash
-
-source install/setup.bash
-
-ros2 service call /save_image example_interfaces/srv/Trigger
-
-
-# COPY
-
-to copy from the root first from outside the container do:
-
-skorupk@lrm-sonata:~$ docker cp kornelia_humble:/root/Shared/ros2_ws/images ~/images
-Successfully copied 20MB to /home/skorupk/images
-copying from the docker to images folder in /home/skorupk
-
-now in another window, from outside sonata: 
-
-PS C:\Users\korne> scp -r sonata:~/images "C:/Users/korne/14_08_complex_scenarios" 
-
-scp -r to copy the whole folder instead of only one file
-
